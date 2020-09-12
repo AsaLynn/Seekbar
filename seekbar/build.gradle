@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-def VERSION_NAME = "3.20"
+def VERSION_NAME = "1.0.0"
 
 android {
     compileSdkVersion 29
@@ -8,7 +8,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 37
+        versionCode 1
         versionName VERSION_NAME
     }
 
@@ -32,7 +32,7 @@ def siteUrl = 'https://github.com/zhang721688/Seekbar'
 def gitUrl = 'https://github.com/zhang721688/Seekbar.git'
 def libName = "bubbleseekbar"
 group = "com.zxn.seekbar"
-version = "1.0.0"
+version = VERSION_NAME
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'

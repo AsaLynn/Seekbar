@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -15,21 +14,6 @@
         android:textSize="12sp"
         android:visibility="gone" />
 
-    <com.zxn.seekbar.BubbleSeekBar
-        android:id="@+id/demo_4_seek_bar_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:bsb_auto_adjust_section_mark="true"
-        app:bsb_is_float_type="true"
-        app:bsb_second_track_color="@color/color_blue"
-        app:bsb_section_count="5"
-        app:bsb_section_text_position="bottom_sides"
-        app:bsb_show_progress_in_float="true"
-        app:bsb_show_section_mark="true"
-        app:bsb_show_section_text="true"
-        app:bsb_show_thumb_text="true"
-        app:bsb_thumb_text_size="18sp" />
 
     <TextView
         android:id="@+id/demo_4_progress_text_1"
@@ -59,22 +43,6 @@
         android:textSize="12sp"
         android:visibility="gone" />
 
-    <com.zxn.seekbar.BubbleSeekBar
-        android:id="@+id/demo_4_seek_bar_3"
-        android:layout_width="match_parent"
-        android:layout_height="16dp"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        app:bsb_always_show_bubble="false"
-        app:bsb_auto_adjust_section_mark="true"
-        app:bsb_second_track_color="@color/color_red"
-        app:bsb_section_count="5"
-        app:bsb_section_text_position="below_section_mark"
-        app:bsb_show_section_mark="true"
-        app:bsb_show_section_text="true"
-        app:bsb_show_thumb_text="true"
-        app:bsb_touch_to_seek="true"
-        app:bsb_track_color="@color/color_red_light" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -83,17 +51,6 @@
         android:text="custom section text"
         android:textSize="12sp"
         android:visibility="gone" />
-
-    <com.zxn.seekbar.BubbleSeekBar
-        android:id="@+id/demo_4_seek_bar_4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        app:bsb_second_track_color="@color/color_blue"
-        app:bsb_section_count="10"
-        app:bsb_section_text_position="below_section_mark"
-        app:bsb_touch_to_seek="true" />
 
     <LinearLayout
         android:layout_width="match_parent"

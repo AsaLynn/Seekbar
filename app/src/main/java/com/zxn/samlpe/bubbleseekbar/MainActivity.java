@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (savedInstanceState == null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.container, DemoFragment1.newInstance(), "demo1");
+            ft.add(R.id.container, DemoFragment5.newInstance(), "demo1");
             ft.commit();
             mTag = "demo1";
         }
@@ -75,17 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         FragmentTransaction ft = fm.beginTransaction();
         if (to == null) {
-            if ("demo1".equals(toTag)) {
-                to = DemoFragment1.newInstance();
-            } else if ("demo2".equals(toTag)) {
-                to = DemoFragment2.newInstance();
-            } else if ("demo3".equals(toTag)) {
-                to = DemoFragment3.newInstance();
-            } else if ("demo4".equals(toTag)) {
-                to = DemoFragment4.newInstance();
-            } else {
-                to = DemoFragment5.newInstance();
-            }
+            to = DemoFragment5.newInstance();
         }
         if (!to.isAdded()) {
             ft.hide(from).add(R.id.container, to, toTag);

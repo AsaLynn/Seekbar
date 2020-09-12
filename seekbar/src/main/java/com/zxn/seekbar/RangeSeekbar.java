@@ -17,8 +17,6 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
-import com.zxn.seekbar.bubbleseekbar.R;
-
 
 /**
  * A seekbar contains two cursor(left and right). Multiple touch supported.
@@ -975,7 +973,7 @@ public class RangeSeekbar extends View {
     /**
      * In pixels. Users should call this method before view is added to parent.
      *
-     * @param height
+     * @param height setSeekbarHeight
      */
     public void setSeekbarHeight(int height) {
         if (height <= 0) {
@@ -989,7 +987,7 @@ public class RangeSeekbar extends View {
     /**
      * To set space between text mark and seekbar.
      *
-     * @param space
+     * @param space 滚动刻度与拖动条的间距
      */
     public void setSpaceBetween(int space) {
         if (space < 0) {
@@ -1007,7 +1005,7 @@ public class RangeSeekbar extends View {
      * This method should be called after {@link #setTextMarkSize(int)}, because
      * view will measure size of text mark by paint.
      *
-     * @param marks
+     * @param marks CharSequence
      */
     public void setTextMarks(CharSequence... marks) {
         if (marks == null || marks.length == 0) {

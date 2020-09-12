@@ -1,5 +1,4 @@
-<manifest package="com.zxn.seekbar.bubbleseekbar">
+<manifest package="com.zxn.seekbar">
 
-    <application/>
-
+    <application />
 </manifest>
