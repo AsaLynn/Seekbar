@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="markArray">
+        <item>0房</item>
+        <item>1房</item>
+        <item>2房</item>
+        <item>3房</item>
+        <item>4房</item>
+        <item>5房</item>
+    </string-array>
+
+    <!--<string-array name="markArray">
+        <item>0</item>
+        <item>50</item>
+        <item>100</item>
+        <item>150</item>
+        <item>200</item>
+        <item>更高</item>
+    </string-array>-->
+
+</resources>
