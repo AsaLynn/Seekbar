@@ -63,3 +63,4 @@ mSeekBar.setOnCursorChangeListener(new RangeSeekbar.OnCursorChangeListener() {
 mSeekBar.setLeftSelection(2);
 mSeekBar.setRightSelection(4);
 ```
+# 系统SeekBar属性分析

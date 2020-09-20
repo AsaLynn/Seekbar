@@ -1,0 +1,804 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/AppTheme.AppBarOverlay"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@null">
+
+        <LinearLayout
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
+            android:paddingTop="2dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="2dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="8dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
+                android:background="#00000000"
+                android:contentDescription="@string/app_name"
+
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:text="求購"
+                android:textColor="@color/color4A90DA"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/color4A90DA" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_qgdj"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="14dp"
+
+            />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/tv_khxm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="客戶姓名"
+                    android:textColor="@color/color707070"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_xt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_khxm"
+                    android:layout_toRightOf="@id/tv_khxm"
+                    android:text="(必填)"
+                    android:textColor="@color/colorA0A0A0"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/tv_woman"
+                    android:layout_width="43dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@color/colorF4F4F4"
+                    android:gravity="center"
+                    android:text="女"
+                    android:textColor="@color/colorA9A9A9"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_man"
+                    android:layout_width="43dp"
+                    android:layout_height="20dp"
+                    android:layout_toLeftOf="@id/tv_woman"
+                    android:background="@color/color3396FB"
+                    android:gravity="center"
+                    android:text="男"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/et_khxm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@id/tv_man"
+                    android:layout_toRightOf="@id/tv_xt"
+                    android:background="@null"
+                    android:gravity="right"
+                    android:textColor="@color/color707070"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="17dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="12dp">
+
+                <TextView
+                    android:id="@+id/tv_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="聯絡電話"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_bt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_phone"
+                    android:layout_toRightOf="@id/tv_phone"
+                    android:text="(必填)"
+                    android:textColor="@color/colorB1B1B1"
+                    android:textSize="10sp" />
+
+                <ImageView
+                    android:id="@+id/iv_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+
+                    />
+
+                <TextView
+                    android:id="@+id/tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/iv_phone"
+                    android:text="手機"
+                    android:textColor="@color/color707070" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="0.5dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/tv"
+                    android:background="@color/color707070" />
+
+                <EditText
+                    android:id="@+id/et_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_toLeftOf="@id/view"
+                    android:layout_toRightOf="@id/tv_bt"
+                    android:background="@null"
+                    android:gravity="right"
+                    android:hint="請輸入聯絡電話"
+                    android:textColor="@color/color707070"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="17dp"
+                android:alpha="0.3"
+                android:background="@color/colorB1B1B1" />
+
+            <RelativeLayout
+                android:id="@+id/rt_yxqy"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv_yxqy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="意向區域"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_yxqy"
+                    android:layout_marginLeft="15dp"
+                    android:text="最多可選擇3個"
+                    android:textColor="@color/color696969"
+                    android:textSize="10sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:alpha="0.3"
+                android:background="@color/colorB1B1B1" />
+
+            <RelativeLayout
+                android:id="@+id/rt_yxlp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv_yxlp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="意向樓盤"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_yxlp"
+                    android:layout_marginLeft="15dp"
+                    android:text="最多可選擇5個"
+                    android:textColor="@color/color696969"
+                    android:textSize="10sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:alpha="0.2"
+                android:background="@color/colorB1B1B1" />
+
+            <RelativeLayout
+                android:id="@+id/rt_khly"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:id="@+id/tv_khly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="客戶來源"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+
+                    />
+
+            </RelativeLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:alpha="0.2"
+                android:background="@color/colorB1B1B1" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="7dp"
+                    android:text="購房意向"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_toLeftOf="@id/tv_bitian"
+
+                    />
+
+                <TextView
+                    android:id="@+id/tv_bitian"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginRight="15dp"
+                    android:text="：必填" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:alpha="0.3"
+                android:background="@color/color707070" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="首期"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="20dp"
+
+                    />
+
+            </LinearLayout>
+
+
+            <com.zxn.seekbar.RangeSeekbar
+                android:id="@+id/seekbar_sq"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                app:leftCursorBackground="@mipmap/ahlib_combined_shape_down"
+                app:markTextArray="@array/array_first_phase"
+                app:rightCursorBackground="@mipmap/ahlib_combined_shape_top"
+                app:seekbarColorSelected="#3396FB"
+                app:seekbarHeight="3dp"
+                app:spaceBetween="30dp"
+                app:textColorNormal="#bbbbbb"
+                app:textColorSelected="#bbbbbb"
+                app:textSize="12sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:alpha="0.3"
+                android:background="@color/color707070" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:text="總價"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="20dp" />
+
+            </LinearLayout>
+
+            <com.zxn.seekbar.RangeSeekbar
+                android:id="@+id/seekbar_zj"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:leftCursorBackground="@mipmap/ahlib_combined_shape_down"
+                app:markTextArray="@array/array_total_price"
+                app:rightCursorBackground="@mipmap/ahlib_combined_shape_top"
+                app:seekbarColorSelected="#3396FB"
+                app:seekbarHeight="5dp"
+                app:spaceBetween="30dp"
+                app:textColorNormal="#bbbbbb"
+                app:textColorSelected="#bbbbbb"
+                app:textSize="12sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:alpha="0.3"
+                android:background="@color/color707070" />
+
+            <RelativeLayout
+                android:id="@+id/rt_mj"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/tv_mj"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="面積"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_mj"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone" />
+
+                <com.zxn.seekbar.RangeSeekbar
+                    android:id="@+id/seekbar_mj"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_below="@id/tv_mj"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    app:leftCursorBackground="@mipmap/ahlib_combined_shape_down"
+                    app:markTextArray="@array/array_area"
+                    app:rightCursorBackground="@mipmap/ahlib_combined_shape_top"
+                    app:seekbarColorSelected="#3396FB"
+                    app:seekbarHeight="5dp"
+                    app:spaceBetween="30dp"
+                    app:textColorNormal="#bbbbbb"
+                    app:textColorSelected="#bbbbbb"
+                    app:textSize="12sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:alpha="0.3"
+                android:background="@color/color707070" />
+
+            <RelativeLayout
+                android:id="@+id/rt_fs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/tv_fs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="房數"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <com.zxn.seekbar.RangeSeekbar
+                    android:id="@+id/seekbar_fs"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_below="@id/tv_fs"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    app:leftCursorBackground="@mipmap/ahlib_combined_shape_down"
+                    app:markTextArray="@array/array_house_count"
+                    app:rightCursorBackground="@mipmap/ahlib_combined_shape_top"
+                    app:seekbarColorSelected="#3396FB"
+                    app:seekbarHeight="5dp"
+                    app:spaceBetween="30dp"
+                    app:textColorNormal="#bbbbbb"
+                    app:textColorSelected="#bbbbbb"
+                    app:textSize="12sp" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_fs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:alpha="0.3"
+                android:background="@color/color707070" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/tv_cs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="廁數"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <com.zxn.seekbar.RangeSeekbar xmlns:seekbar="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/seekbar_cs"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_below="@id/tv_cs"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    app:leftCursorBackground="@mipmap/ahlib_combined_shape_down"
+                    app:markTextArray="@array/csArray"
+                    app:rightCursorBackground="@mipmap/ahlib_combined_shape_top"
+                    app:seekbarColorSelected="#3396FB"
+                    app:seekbarHeight="5dp"
+                    app:spaceBetween="30dp"
+                    app:textColorNormal="#bbbbbb"
+                    app:textColorSelected="#bbbbbb"
+                    app:textSize="12sp" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_cs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:alpha="0.3"
+                android:background="@color/color707070" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="樓層"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_lc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/lt_lc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_minfloor"
+                    android:layout_width="135dp"
+                    android:layout_height="26dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorF0F0F0"
+                    android:gravity="center"
+                    android:hint="最低層"
+                    android:textColor="@color/colorA0A0A0"
+                    android:textSize="10sp" />
+
+                <View
+                    android:layout_width="11dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="6dp"
+                    android:background="@color/colorA0A0A0" />
+
+                <EditText
+                    android:id="@+id/et_maxfloor"
+                    android:layout_width="135dp"
+                    android:layout_height="26dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorF0F0F0"
+                    android:gravity="center"
+                    android:hint="最高層(可選)"
+                    android:textColor="@color/colorA0A0A0"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:alpha="0.3"
+                android:background="@color/color707070" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="物业用途"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="4dp"
+                    android:alpha="0.3"
+                    android:background="@color/color707070" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="置业原因"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="4dp"
+                    android:alpha="0.3"
+                    android:background="@color/color707070" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="特別要求"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:alpha="0.2"
+                    android:background="@color/colorB1B1B1" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="17dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_bz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="備註"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_bz"
+                    android:layout_toRightOf="@id/tv_bz"
+                    android:text="(選填)"
+                    android:textColor="@color/colorA0A0A0"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="17dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/colorF4F4F4"
+                android:gravity="top"
+                android:hint="這裏可以填寫一些需要保密的信息"
+                android:paddingLeft="10dp"
+                android:paddingTop="4dp"
+                android:textColor="@color/color707070"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

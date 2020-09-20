@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/tv_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="面积"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_15"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/color0000EE"
+        android:textSize="@dimen/sp_30"
+        app:layout_constraintTop_toBottomOf="@id/tv_type" />
+
+    <com.zxn.seekbar.CursorSeekBar
+        android:id="@+id/csb_seek"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:paddingTop="10dp"
+        android:visibility="visible"
+        app:csbBarColor="#bbbbbb"
+        app:csbBarColorSelected="@color/color0000EE"
+        app:csbLeftCursorDrawable="@mipmap/ahlib_combined_shape_down"
+        app:csbMarkTextColor="@color/white"
+        app:csbMarkTextSize="12sp"
+        app:csbMax="3000"
+        app:csbRightCursorDrawable="@mipmap/ahlib_combined_shape_top"
+        app:csbSpaceBetween="30dp"
+        app:csbTextColor="@color/c_bbbbbb"
+        app:csbTextColorSelected="@color/c_bbbbbb"
+        app:csbTextSize="@dimen/sp_12"
+        app:csbUnit=""
+        app:layout_constraintTop_toBottomOf="@id/tv_count" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

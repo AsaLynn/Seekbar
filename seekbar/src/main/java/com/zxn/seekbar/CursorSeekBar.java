@@ -5,32 +5,83 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
+import com.zxn.seekbar.api.ISeekBar;
+import com.zxn.seekbar.listener.CursorChangeListener;
+import com.zxn.seekbar.listener.LeftCursorChangListener;
+import com.zxn.seekbar.listener.RightCursorChangListener;
 import com.zxn.seekbar.utils.DimensionUtils;
 
-
 /**
- * A seekbar contains two cursor(left and right). Multiple touch supported.
- * https://github.com/dolphinwang/RangeSeekbar
- * Created by zxn on 2020/9/12.
+ * Created by zxn on 2020/9/19.
  */
-
-public class RangeSeekbar extends View {
-
-    private static final String DEBUG_TAG = "RangeSeekbar";
+public class CursorSeekBar extends View implements ISeekBar {
 
     private static final int DEFAULT_DURATION = 100;
+    private static final String TAG = CursorSeekBar.class.getSimpleName();
+    //<editor-fold desc="属性变量 property and variable">
+    //<editor-fold desc="监听属性">
+    protected LeftCursorChangListener mLeftCursorChangListener;
+    protected RightCursorChangListener mRightCursorChangListener;
+    //</editor-fold>
+    int mMinWidth;
+    int mMaxWidth;
+    int mMinHeight = 10;
+    int mMaxHeight;
+    /**
+     * 双坐标的情况,左右坐标应保持的最小间隔距离.
+     */
+    private float mMinDX;
+    /**
+     * 游标起点位置
+     */
+    private float mBeginCursorX;
+    /**
+     * 游标终点位置
+     */
+    private float mEndCursorX;
+    /**
+     * 游标活动范围值
+     */
+    private float mRangeCursorX;
 
+    /**
+     * 右游标当前的位置比例.
+     */
+    private float mRightCursorIndex = 1.0f;
+    /**
+     * 左游标当前的位置比例.
+     */
+    private float mLeftCursorIndex = 0;
+    /**
+     * 右游标当前的刻度值
+     * 游标当前的刻度值 = ((游标当前位置 - 游标起点位置) / 游标最大活动范围) * mMax.
+     */
+    private int mRightProgress;
+
+    /**
+     * 左游标当前的刻度值
+     */
+    private int mLeftProgress;
+
+    /**
+     * 最大刻度值
+     */
+    private int mMax;
+    /**
+     * 文本和seekbar之间的空间
+     */
+    private int mMarginBetween;
 
     private int mDuration;
     /**
@@ -46,10 +97,8 @@ public class RangeSeekbar extends View {
     /**
      * Represent states.
      */
-    private int[] mPressedEnableState = new int[]{
-            android.R.attr.state_pressed, android.R.attr.state_enabled};
-    private int[] mUnPresseEanabledState = new int[]{
-            -android.R.attr.state_pressed, android.R.attr.state_enabled};
+    private int[] mPressedEnableState = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
+    private int[] mUnPresseEanabledState = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
     /**
      * Colors of text and seekbar in different states.
      */
@@ -66,10 +115,6 @@ public class RangeSeekbar extends View {
      */
     private int mTextSize;
     /**
-     * Space between the text and the seekbar
-     */
-    private int mMarginBetween;
-    /**
      * Length of every part. As we divide some parts according to marks.
      */
     private int mPartLength;
@@ -77,17 +122,15 @@ public class RangeSeekbar extends View {
      * Contents of text mark.
      */
     private CharSequence[] mTextArray;
-    /**
-     *
-     */
     private float[] mTextWidthArray;
+    /**
+     * 内边距的值范围
+     */
     private Rect mPaddingRect;
     private Rect mLeftCursorRect;
     private Rect mRightCursorRect;
     private RectF mSeekbarRect;
     private RectF mSeekbarRectSelected;
-    private float mLeftCursorIndex = 0;
-    private float mRightCursorIndex = 1.0f;
     private int mLeftCursorNextIndex = 0;
     private int mRightCursorNextIndex = 1;
     private Paint mPaint;
@@ -98,28 +141,53 @@ public class RangeSeekbar extends View {
     private boolean mLeftHited;
     private boolean mRightHited;
     private int mRightBoundary;
-    private OnCursorChangeListener mListener;
     private Rect[] mClickRectArray;
     private int mClickIndex = -1;
     private int mClickDownLastX = -1;
     private int mClickDownLastY = -1;
     private CharSequence mUnit;
+    private boolean mEnableLeftCursor = true;
+    private int mMarkCount = 6;
+    private int mMarkTextSize;
+    private int mMarkTextColor;
+    private int mPartWidth;
+    private int mCursorHeight;
+    private int mCursorWidth;
+    private boolean mEnableRightCursor = true;
+    private int mAverage;
+    //</editor-fold>
 
-    public RangeSeekbar(Context context) {
+    //<editor-fold desc="构造方法 construction methods">
+    public CursorSeekBar(Context context) {
         this(context, null, 0);
     }
 
-    public RangeSeekbar(Context context, AttributeSet attrs) {
+    public CursorSeekBar(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public RangeSeekbar(Context context, AttributeSet attrs, int defStyle) {
+    public CursorSeekBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        //initRangeSeekbar();
+        initSeekBar();
 
         applyConfig(context, attrs);
 
+        initRect();
+
+        initPaint();
+
+        initTextWidthArray();
+
+        setWillNotDraw(false);
+
+        setFocusable(true);
+
+        setClickable(true);
+    }
+
+    //</editor-fold>
+    private void initRect() {
         if (mPaddingRect == null) {
             mPaddingRect = new Rect();
         }
@@ -139,18 +207,25 @@ public class RangeSeekbar extends View {
             mClickRectArray = new Rect[mTextArray.length];
         }
 
+        Context context = getContext();
         mLeftScroller = new Scroller(context, new DecelerateInterpolator());
         mRightScroller = new Scroller(context, new DecelerateInterpolator());
-
-        initPaint();
-        initTextWidthArray();
-
-        setWillNotDraw(false);
-        setFocusable(true);
-        setClickable(true);
     }
 
+    /**
+     * 初始化默认值.
+     */
+    private void initSeekBar() {
+        mMax = 100;
+        mDuration = DEFAULT_DURATION;
+        mMinWidth = 24;
+        mMaxWidth = 48;
+        mMinHeight = 10;
+        mMaxHeight = 48;
 
+        computeProgress(true);
+        computeProgress(false);
+    }
 
     /**
      * 应用读取属性值.
@@ -165,41 +240,72 @@ public class RangeSeekbar extends View {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CursorSeekBar);
 
-        //mUnit = typedArray.getText(R.styleable.RangeSeekbar_unit);
+        mEnableLeftCursor = typedArray.getBoolean(R.styleable.CursorSeekBar_csbEnableLeftCursor, true);
+        mUnit = typedArray.getText(R.styleable.CursorSeekBar_csbUnit);
         mUnit = TextUtils.isEmpty(mUnit) ? "" : mUnit;
 
-        mDuration = typedArray.getInteger(R.styleable.RangeSeekbar_autoMoveDuration,
+        mDuration = typedArray.getInteger(R.styleable.CursorSeekBar_csbAutoMoveDuration,
                 DEFAULT_DURATION);
 
         mLeftCursorBG = typedArray
-                .getDrawable(R.styleable.RangeSeekbar_leftCursorBackground);
+                .getDrawable(R.styleable.CursorSeekBar_csbLeftCursorDrawable);
         mRightCursorBG = typedArray
-                .getDrawable(R.styleable.RangeSeekbar_rightCursorBackground);
+                .getDrawable(R.styleable.CursorSeekBar_csbRightCursorDrawable);
 
-        mTextColorNormal = typedArray.getColor(R.styleable.RangeSeekbar_textColorNormal,
+        mTextColorNormal = typedArray.getColor(R.styleable.CursorSeekBar_csbTextColor,
                 Color.BLACK);
         mTextColorSelected = typedArray.getColor(
-                R.styleable.RangeSeekbar_textColorSelected,
+                R.styleable.CursorSeekBar_csbTextColorSelected,
                 Color.rgb(242, 79, 115));
 
         mSeekbarColorNormal = typedArray.getColor(
-                R.styleable.RangeSeekbar_seekbarColorNormal,
+                R.styleable.CursorSeekBar_csbBarColor,
                 Color.rgb(218, 215, 215));
         mSeekbarColorSelected = typedArray.getColor(
-                R.styleable.RangeSeekbar_seekbarColorSelected,
+                R.styleable.CursorSeekBar_csbBarColorSelected,
                 Color.rgb(242, 79, 115));
 
         mSeekbarHeight = (int) typedArray.getDimension(
-                R.styleable.RangeSeekbar_seekbarHeight, 10);
-        mTextSize = (int) typedArray.getDimension(R.styleable.RangeSeekbar_textSize, 15);
-        mMarginBetween = (int) typedArray.getDimension(
-                R.styleable.RangeSeekbar_spaceBetween, 15);
+                R.styleable.CursorSeekBar_csbBarHeight, 10);
+        mTextSize = (int) typedArray.getDimension(R.styleable.CursorSeekBar_csbTextSize, 15);
+        mMarkTextSize = (int) typedArray.getDimension(R.styleable.CursorSeekBar_csbMarkTextSize, 15);
+        mMarginBetween = (int) typedArray.getDimension(R.styleable.CursorSeekBar_csbSpaceBetween, 15);
+        mMarkTextColor = typedArray.getColor(R.styleable.CursorSeekBar_csbMarkTextColor, Color.WHITE);
 
-        mTextArray = typedArray.getTextArray(R.styleable.RangeSeekbar_markTextArray);
+//        mMinWidth = a.getDimensionPixelSize(R.styleable.CursorSeekBar_minWidth, mMinWidth);
+//        mMaxWidth = a.getDimensionPixelSize(R.styleable.CursorSeekBar_maxWidth, mMaxWidth);
+//        mMinHeight = a.getDimensionPixelSize(R.styleable.CursorSeekBar_minHeight, mMinHeight);
+//        mMaxHeight = a.getDimensionPixelSize(R.styleable.CursorSeekBar_maxHeight, mMaxHeight);
+
+        setMax(typedArray.getInt(R.styleable.CursorSeekBar_csbMax, mMax));
+
+        mTextArray = typedArray.getTextArray(R.styleable.CursorSeekBar_csbMarkTextArray);
         if (mTextArray != null && mTextArray.length > 0) {
             mLeftCursorIndex = 0;
             mRightCursorIndex = mTextArray.length - 1;
             mRightCursorNextIndex = (int) mRightCursorIndex;
+            mMax = 0;
+        } else {
+            mTextArray = new CharSequence[mMarkCount];
+            mAverage = mMax / (mMarkCount - 1);
+            for (int i = 0; i < mMarkCount; i++) {
+                mTextArray[i] = String.valueOf(mAverage * i);
+            }
+
+            if (mEnableLeftCursor && mEnableRightCursor) {
+                mRightCursorIndex = mMarkCount - 1;
+            } else {
+                //目前只考虑左游标不可用的情景
+                mRightCursorIndex = 0;
+            }
+            //mRightCursorIndex = !mEnableLeftCursor ? 0 : 1.0f;
+        }
+
+        if (mEnableLeftCursor) {
+            computeProgress(true);
+        }
+        if (mEnableRightCursor) {
+            computeProgress(false);
         }
 
         typedArray.recycle();
@@ -207,9 +313,8 @@ public class RangeSeekbar extends View {
 
     private void initPaint() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
         mPaint.setAntiAlias(true);
-        mPaint.setStyle(Style.FILL);
+        mPaint.setStyle(Paint.Style.FILL);
         mPaint.setTextSize(mTextSize);
     }
 
@@ -222,10 +327,10 @@ public class RangeSeekbar extends View {
         }
     }
 
+    //<editor-fold desc="生命周期以及重载方法">
     @Override
     public void setPadding(int left, int top, int right, int bottom) {
         super.setPadding(left, top, right, bottom);
-
         if (mPaddingRect == null) {
             mPaddingRect = new Rect();
         }
@@ -275,41 +380,71 @@ public class RangeSeekbar extends View {
 
         mPartLength = ((int) (mSeekbarRect.right - mSeekbarRect.left))
                 / (mTextArray.length - 1);
-
+        mMinDX = 0.5f * mPartLength;
         mRightBoundary = (int) (mSeekbarRect.right + mRightCursorBG
                 .getIntrinsicWidth() / 2);
 
+        mBeginCursorX = mSeekbarRect.left;
+        mEndCursorX = mSeekbarRect.right;
+        mRangeCursorX = mSeekbarRect.right - mSeekbarRect.left;
+        Log.i(TAG, "onMeasure: mBeginCursorX:" + mBeginCursorX + "&mEndCursorX:" + mEndCursorX + "&mRangeCursorX:" + mRangeCursorX);
+        //onMeasure: mBeginCursorX:45.0&mEndCursorX:945.0&mRangeCursorX:900.0
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+//        mCursorWidth = mCursorDrawable == null
+//                ? 10
+//                : mCursorDrawable.getIntrinsicWidth();
+//        mCursorHeight = mCursorDrawable == null
+//                ? mSeekbarHeight
+//                : mCursorDrawable.getIntrinsicHeight();
+//        final int cursorSeekbarH = Math.max(mSeekbarHeight, mCursorHeight);
+//        //计算必要的高度
+//        int heightNeeded = cursorSeekbarH +
+//                + mMarkTextSize + mPaddingRect.top + mPaddingRect.bottom;
+//        if (heightMode == MeasureSpec.EXACTLY) {
+//            heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY);
+//        } else if (heightMode == MeasureSpec.AT_MOST) {
+//            heightMeasureSpec = MeasureSpec.makeMeasureSpec(
+//                    heightSize < heightNeeded ? heightSize : heightNeeded, MeasureSpec.EXACTLY);
+//        } else {
+//            heightMeasureSpec = MeasureSpec.makeMeasureSpec(
+//                    heightNeeded, MeasureSpec.EXACTLY);
+//        }
+//        final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+//        mSeekbarRect.left = mPaddingRect.left
+//                + mCursorWidth / 2;
+//        mSeekbarRect.right = widthSize - mPaddingRect.right
+//                - mCursorWidth / 2;
+//        mSeekbarRect.top = mPaddingRect.top + mMarkTextSize + mMarginBetween;
+//        mSeekbarRect.bottom = mSeekbarRect.top + mSeekbarHeight;
+//        mPartWidth = ((int) (mSeekbarRect.right - mSeekbarRect.left))
+//                / (mMarkCount - 1);
+//        mPartLength = mPartWidth;
+////        mRightBoundary = (int) (mSeekbarRect.right + mRightCursorBG
+////                .getIntrinsicWidth() / 2);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-
-        /*** Draw text marks ***/
-        final int length = mTextArray.length;
+        final int length = mMarkCount;
         mPaint.setTextSize(mTextSize);
         for (int i = 0; i < length; i++) {
-            if ((i > mLeftCursorIndex && i < mRightCursorIndex)
-                    || (i == mLeftCursorIndex || i == mRightCursorIndex)) {
+            if ((i > mLeftCursorIndex && i < mRightCursorIndex) || (i == mLeftCursorIndex || i == mRightCursorIndex)) {
                 mPaint.setColor(mTextColorSelected);
             } else {
                 mPaint.setColor(mTextColorNormal);
             }
-
             final String text2draw = mTextArray[i].toString() + mUnit;
             final float textWidth = mTextWidthArray[i];
-
             float textDrawLeft = 0;
             // The last text mark's draw location should be adjust.
             if (i == length - 1) {
-                textDrawLeft = mSeekbarRect.right
-                        + (mRightCursorBG.getIntrinsicWidth() / 2) - textWidth;
+                textDrawLeft = mSeekbarRect.right + (mRightCursorBG.getIntrinsicWidth() / 2) - textWidth;
             } else {
                 textDrawLeft = mSeekbarRect.left + i * mPartLength - textWidth / 2;
             }
 
-            canvas.drawText(text2draw, textDrawLeft, mPaddingRect.top
-                    + mTextSize, mPaint);
+            canvas.drawText(text2draw, textDrawLeft, mPaddingRect.top + mTextSize, mPaint);
 
             //绘制刻度
             if (i > 0 && i < length - 1) {
@@ -338,12 +473,14 @@ public class RangeSeekbar extends View {
 
         /*** Draw seekbar ***/
         final float radius = (float) mSeekbarHeight / 2;
-        mSeekbarRectSelected.left = mSeekbarRect.left + mPartLength
-                * mLeftCursorIndex;
-        mSeekbarRectSelected.right = mSeekbarRect.left + mPartLength
-                * mRightCursorIndex;
-        // If whole of seekbar is selected, just draw seekbar with selected
-        // color.
+        mSeekbarRectSelected.left = mSeekbarRect.left + mPartLength * mLeftCursorIndex;
+        if (mSeekbarRect.left + mPartLength * mRightCursorIndex > mSeekbarRect.right) {
+            mSeekbarRectSelected.right = mSeekbarRect.right;
+        } else {
+            mSeekbarRectSelected.right = mSeekbarRect.left + mPartLength * mRightCursorIndex;
+        }
+
+        // If whole of seekbar is selected, just draw seekbar with selected color.
         if (mLeftCursorIndex == 0 && mRightCursorIndex == length - 1) {
             mPaint.setColor(mSeekbarColorSelected);
             canvas.drawRoundRect(mSeekbarRect, radius, radius, mPaint);
@@ -351,7 +488,6 @@ public class RangeSeekbar extends View {
             // Draw background first.
             mPaint.setColor(mSeekbarColorNormal);
             canvas.drawRoundRect(mSeekbarRect, radius, radius, mPaint);
-
             // Draw selected part.
             mPaint.setColor(mSeekbarColorSelected);
             // Can draw rounded rectangle, but original rectangle is enough.
@@ -361,44 +497,45 @@ public class RangeSeekbar extends View {
 
         /*** Draw cursors ***/
         // left cursor first
-        final int leftWidth = mLeftCursorBG.getIntrinsicWidth();
-        final int leftHieght = mLeftCursorBG.getIntrinsicHeight();
-        final int leftLeft = (int) (mSeekbarRectSelected.left - (float) leftWidth / 2);
-        //final int leftTop = (int) ((mSeekbarRect.top + mSeekbarHeight / 2) - (leftHieght / 2));
-        final int leftTop = (int) (mSeekbarRect.bottom);
-        mLeftCursorRect.left = leftLeft;
-        mLeftCursorRect.top = leftTop;
-        mLeftCursorRect.right = leftLeft + leftWidth;
-        mLeftCursorRect.bottom = leftTop + leftHieght;
-        mLeftCursorBG.setBounds(mLeftCursorRect);
-        mLeftCursorBG.draw(canvas);
+        if (mEnableLeftCursor) {
+            final int leftWidth = mLeftCursorBG.getIntrinsicWidth();
+            final int leftHeight = mLeftCursorBG.getIntrinsicHeight();
+            final int leftLeft = (int) (mSeekbarRectSelected.left - (float) leftWidth / 2);
+            final int leftTop = (int) (mSeekbarRect.bottom);
+            mLeftCursorRect.left = leftLeft;
+            mLeftCursorRect.top = leftTop;
+            mLeftCursorRect.right = leftLeft + leftWidth;
+            mLeftCursorRect.bottom = leftTop + leftHeight;
+            mLeftCursorBG.setBounds(mLeftCursorRect);
+            mLeftCursorBG.draw(canvas);
 
-        //绘制左侧选中的刻度值
-        mPaint.setColor(Color.parseColor("#FFFFFF"));
-        String mLeftCursorText = mTextArray[(int) mLeftCursorIndex].toString();
-        canvas.drawText(mLeftCursorText, mLeftCursorRect.left + leftWidth / 2 - mPaint.measureText(mLeftCursorText) / 2, mLeftCursorRect.top + leftHieght / 2
-                + mTextSize / 2, mPaint);
-
+            //绘制左侧选中的刻度值
+            mPaint.setColor(mMarkTextColor);
+            String mLeftCursorText = String.valueOf(mLeftProgress);
+            canvas.drawText(mLeftCursorText, mLeftCursorRect.left + leftWidth / 2 - mPaint.measureText(mLeftCursorText) / 2, mLeftCursorRect.top + leftHeight / 2 + mTextSize / 2, mPaint);
+        }
 
         // right cursor second
         final int rightWidth = mRightCursorBG.getIntrinsicWidth();
         final int rightHeight = mRightCursorBG.getIntrinsicHeight();
         final int rightLeft = (int) (mSeekbarRectSelected.right - (float) rightWidth / 2);
-        //final int rightTop = (int) ((mSeekbarRectSelected.top + mSeekbarHeight / 2) - (rightHeight / 2));
-        final int rightTop = (int) (mSeekbarRectSelected.top - rightHeight);
+        final int rightTop = (int) (mSeekbarRect.top - rightHeight);
         mRightCursorRect.left = rightLeft;
         mRightCursorRect.top = rightTop;
         mRightCursorRect.right = rightLeft + rightWidth;
         mRightCursorRect.bottom = rightTop + rightHeight;
         mRightCursorBG.setBounds(mRightCursorRect);
         mRightCursorBG.draw(canvas);
+        Log.i(TAG, "onDraw: RightCursorRectLeft:" + mRightCursorRect.left + "&RightCursorRectRight:" + mRightCursorRect.right);
+        //RightCursorRectRightMax:0,RightCursorRectRightMax:990,Cursor宽度:90
+        Log.i(TAG, "onDraw: RightCursorCenterX:" + (mRightCursorRect.right - rightWidth / 2));
+        //(MIN:45),(MAX:945),(LENGTH:900),
 
-        //绘制右边侧选中的刻度值
-        mPaint.setColor(Color.parseColor("#FFFFFF"));
-        //String mRightCursorText = String.valueOf((int) mRightCursorIndex);
-        String mRightCursorText = mTextArray[(int) mRightCursorIndex].toString();
-        canvas.drawText(mRightCursorText, mRightCursorRect.left + rightWidth / 2 - mPaint.measureText(mRightCursorText) / 2, mRightCursorRect.bottom - rightHeight / 2
-                + mTextSize / 4, mPaint);
+        //绘制右边侧选中游标的刻度值
+        mPaint.setColor(mMarkTextColor);
+        String mRightCursorText = String.valueOf(mRightProgress);
+        canvas.drawText(mRightCursorText, mRightCursorRect.left + rightWidth / 2 - mPaint.measureText(mRightCursorText) / 2, mRightCursorRect.bottom - rightHeight / 2 + mTextSize / 4, mPaint);
+        Log.i(TAG, "onDraw: mRightCursorIndex:" + mRightCursorIndex);
     }
 
     @Override
@@ -406,44 +543,51 @@ public class RangeSeekbar extends View {
         if (getParent() != null) {
             getParent().requestDisallowInterceptTouchEvent(true);
         }
-
-        // For multiple touch
+        //多次触摸
         final int action = event.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-
-                handleTouchDown(event);
-
-                break;
             case MotionEvent.ACTION_POINTER_DOWN:
-
                 handleTouchDown(event);
-
                 break;
             case MotionEvent.ACTION_MOVE:
-
                 handleTouchMove(event);
-
                 break;
             case MotionEvent.ACTION_POINTER_UP:
-
                 handleTouchUp(event);
-
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-
                 handleTouchUp(event);
                 mClickIndex = -1;
                 mClickDownLastX = -1;
                 mClickDownLastY = -1;
-
                 break;
         }
-
         return super.onTouchEvent(event);
     }
 
+    @Override
+    public void computeScroll() {
+        if (mLeftScroller.computeScrollOffset()) {
+            final int deltaX = mLeftScroller.getCurrX();
+
+            mLeftCursorIndex = (float) deltaX / mPartLength;
+
+            invalidate();
+        }
+
+        if (mRightScroller.computeScrollOffset()) {
+            final int deltaX = mRightScroller.getCurrX();
+
+            mRightCursorIndex = (float) deltaX / mPartLength;
+
+            invalidate();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="触摸处理 life cycle">
     private void handleTouchDown(MotionEvent event) {
         final int actionIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
         final int downX = (int) event.getX(actionIndex);
@@ -518,39 +662,20 @@ public class RangeSeekbar extends View {
             if (!mLeftHited) {
                 return;
             }
-
-            // If cursor between in tow mark locations, it should be located on
-            // the lower or higher one.
-
-            // step 1:Calculate the offset with lower mark.
-            final int lower = (int) Math.floor(mLeftCursorIndex);
+            /*final int lower = (int) Math.floor(mLeftCursorIndex);
             final int higher = (int) Math.ceil(mLeftCursorIndex);
-
             final float offset = mLeftCursorIndex - lower;
             if (offset != 0) {
-
-                // step 2:Decide which mark will go to.
                 if (offset < 0.5f) {
-                    // If left cursor want to be located on lower mark, go ahead
-                    // guys.
-                    // Because right cursor will never appear lower than the
-                    // left one.
                     mLeftCursorNextIndex = lower;
                 } else if (offset > 0.5f) {
                     mLeftCursorNextIndex = higher;
-                    // If left cursor want to be located on higher mark,
-                    // situation becomes a little complicated.
-                    // We should check that whether distance between left and
-                    // right cursor is less than 1, and next index of left
-                    // cursor is difference with current
-                    // of right one.
                     if (Math.abs(mLeftCursorIndex - mRightCursorIndex) <= 1
                             && mLeftCursorNextIndex == mRightCursorNextIndex) {
                         // Left can not go to the higher, just to the lower one.
                         mLeftCursorNextIndex = lower;
                     }
                 }
-
                 // step 3: Move to.
                 if (!mLeftScroller.computeScrollOffset()) {
                     final int fromX = (int) (mLeftCursorIndex * mPartLength);
@@ -560,46 +685,54 @@ public class RangeSeekbar extends View {
 
                     triggleCallback(true, mLeftCursorNextIndex);
                 }
-            }
+            }*/
+
+            //计算左游标当前刻度值
+            computeProgress(true);
+            //左游标抬起进行回调
+            triggleCallback(true);
 
             // Reset values of parameters
             mLeftPointerLastX = 0;
             mLeftCursorBG.setState(mUnPresseEanabledState);
             mLeftPointerID = -1;
             mLeftHited = false;
-
             invalidate();
         } else if (actionID == mRightPointerID) {
             if (!mRightHited) {
                 return;
             }
 
-            final int lower = (int) Math.floor(mRightCursorIndex);
-            final int higher = (int) Math.ceil(mRightCursorIndex);
-
-            final float offset = mRightCursorIndex - lower;
-            if (offset != 0) {
-
-                if (offset > 0.5f) {
-                    mRightCursorNextIndex = higher;
-                } else if (offset < 0.5f) {
-                    mRightCursorNextIndex = lower;
-                    if (Math.abs(mLeftCursorIndex - mRightCursorIndex) <= 1
-                            && mRightCursorNextIndex == mLeftCursorNextIndex) {
+            if (mAverage == 1) {
+                final int lower = (int) Math.floor(mRightCursorIndex);
+                final int higher = (int) Math.ceil(mRightCursorIndex);
+                final float offset = mRightCursorIndex - lower;
+                if (offset != 0) {
+                    if (offset > 0.5f) {
                         mRightCursorNextIndex = higher;
+                        mRightCursorIndex = higher;
+                    } else if (offset < 0.5f) {
+                        mRightCursorNextIndex = lower;
+                        if (Math.abs(mLeftCursorIndex - mRightCursorIndex) <= 1
+                                && mRightCursorNextIndex == mLeftCursorNextIndex) {
+                            mRightCursorNextIndex = !mEnableLeftCursor ? lower : higher;
+                            mRightCursorIndex = !mEnableLeftCursor ? lower : higher;
+                        }
                     }
-                }
-
-                if (!mRightScroller.computeScrollOffset()) {
-                    final int fromX = (int) (mRightCursorIndex * mPartLength);
-
-                    mRightScroller.startScroll(fromX, 0, mRightCursorNextIndex
-                            * mPartLength - fromX, 0, mDuration);
-
-                    triggleCallback(false, mRightCursorNextIndex);
+                    if (!mRightScroller.computeScrollOffset()) {
+                        final int fromX = (int) (mRightCursorIndex * mPartLength);
+                        mRightScroller.startScroll(fromX, 0, mRightCursorNextIndex * mPartLength - fromX, 0, mDuration);
+                        //triggleCallback(false, mRightCursorNextIndex);
+                    }
                 }
             }
 
+            //计算右游标当前刻度值
+            computeProgress(false);
+            //右侧游标抬起进行回调
+            triggleCallback(false);
+
+            //重置.
             mRightPointerLastX = 0;
             mLeftCursorBG.setState(mUnPresseEanabledState);
             mRightPointerID = -1;
@@ -629,7 +762,7 @@ public class RangeSeekbar extends View {
                                 mLeftCursorNextIndex * mPartLength - fromX, 0,
                                 mDuration);
 
-                        triggleCallback(true, mLeftCursorNextIndex);
+                        triggleCallback(true);
 
                         invalidate();
                     }
@@ -641,7 +774,7 @@ public class RangeSeekbar extends View {
                                 mRightCursorNextIndex * mPartLength - fromX, 0,
                                 mDuration);
 
-                        triggleCallback(false, mRightCursorNextIndex);
+                        triggleCallback(false);
 
                         invalidate();
                     }
@@ -651,6 +784,7 @@ public class RangeSeekbar extends View {
     }
 
     private void handleTouchMove(MotionEvent event) {
+        Log.i(TAG, "handleTouchMove: " + mRightCursorIndex);
         if (mClickIndex != -1) {
             final int actionIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
             final int x = (int) event.getX(actionIndex);
@@ -666,32 +800,41 @@ public class RangeSeekbar extends View {
             final int index = event.findPointerIndex(mLeftPointerID);
             final float x = event.getX(index);
 
+            //X坐标的变化量
             float deltaX = x - mLeftPointerLastX;
             mLeftPointerLastX = (int) x;
 
-            DIRECTION direction = (deltaX < 0 ? DIRECTION.LEFT
-                    : DIRECTION.RIGHT);
+            DIRECTION direction = (deltaX < 0 ? DIRECTION.LEFT : DIRECTION.RIGHT);
 
-            if (direction == DIRECTION.LEFT && mLeftCursorIndex == 0) {
+            if (direction == DIRECTION.LEFT && mLeftCursorIndex < 0) {
                 return;
             }
 
             // Check whether cursor will move out of boundary
             if (mLeftCursorRect.left + deltaX < mPaddingRect.left) {
                 mLeftCursorIndex = 0;
+                computeProgress(true);
+                triggleCallback(true);
                 invalidate();
                 return;
             }
 
-            // Check whether left and right cursor will collision.
-            if (mLeftCursorRect.right + deltaX >= mRightCursorRect.left) {
+            // Check whether left and right cursor will collision(碰撞).
+            //if (mLeftCursorRect.right + deltaX >= mRightCursorRect.left) {
+            if (mLeftCursorRect.right + deltaX >= mRightCursorRect.right) {
                 // Check whether right cursor is in "Touch" mode( if in touch
                 // mode, represent that we can not move it at all), or right
                 // cursor reach the boundary.
-                if (mRightHited || mRightCursorIndex == mTextArray.length - 1
-                        || mRightScroller.computeScrollOffset()) {
+                if (mRightHited || mRightCursorIndex == mTextArray.length - 1 || mRightScroller.computeScrollOffset()) {
                     // Just move left cursor to the left side of right one.
-                    deltaX = mRightCursorRect.left - mLeftCursorRect.right;
+                    //deltaX = mRightCursorRect.left - mLeftCursorRect.right;
+                    deltaX = mRightCursorRect.right - mLeftCursorRect.right;
+                    /*if (deltaX <= mMinDX) {
+                        deltaX = mMinDX;
+                    }*/
+                    /*if (deltaX == 0) {
+                        deltaX = -mMinDX;
+                    }*/
                 } else {
                     // Move right cursor to higher location.
                     final int maxMarkIndex = mTextArray.length - 1;
@@ -701,12 +844,11 @@ public class RangeSeekbar extends View {
 
                         if (!mRightScroller.computeScrollOffset()) {
                             final int fromX = (int) (mRightCursorIndex * mPartLength);
-
-                            mRightScroller
-                                    .startScroll(fromX, 0,
-                                            mRightCursorNextIndex * mPartLength
-                                                    - fromX, 0, mDuration);
-                            triggleCallback(false, mRightCursorNextIndex);
+                            //int startX, int startY, int dx, int dy, int duration
+                            //mRightScroller.startScroll(fromX, 0, mRightCursorNextIndex * mPartLength - fromX, 0, mDuration);
+                            int dx = 2;//hitedX
+                            mRightScroller.startScroll(fromX, 0, dx, 0, mDuration);
+                            triggleCallback(false);
                         }
                     }
                 }
@@ -721,20 +863,25 @@ public class RangeSeekbar extends View {
             // Calculate the movement.
             final float moveX = deltaX / mPartLength;
             mLeftCursorIndex += moveX;
-
+            if (mLeftCursorIndex > (mMarkCount - 1)) {
+                mLeftCursorIndex = (mMarkCount - 1);
+            } else if (mLeftCursorIndex < 0) {
+                mLeftCursorIndex = 0;
+            } else if (mLeftCursorIndex > ((mMarkCount - 1) - 0.5f)) {
+                mLeftCursorIndex = (mMarkCount - 1) - 0.5f;
+            }
+            computeProgress(true);
             invalidate();
         }
 
         if (mRightHited && mRightPointerID != -1) {
-
             final int index = event.findPointerIndex(mRightPointerID);
             final float x = event.getX(index);
-
             float deltaX = x - mRightPointerLastX;
             mRightPointerLastX = (int) x;
 
-            DIRECTION direction = (deltaX < 0 ? DIRECTION.LEFT
-                    : DIRECTION.RIGHT);
+            Log.e(TAG, "handleTouchMove: mRightPointerX-->:" + x);
+            DIRECTION direction = (deltaX < 0 ? DIRECTION.LEFT : DIRECTION.RIGHT);
 
             final int maxIndex = mTextArray.length - 1;
             if (direction == DIRECTION.RIGHT && mRightCursorIndex == maxIndex) {
@@ -746,14 +893,14 @@ public class RangeSeekbar extends View {
             }
 
             final int maxMarkIndex = mTextArray.length - 1;
-            if (direction == DIRECTION.RIGHT
-                    && mRightCursorIndex == maxMarkIndex) {
+            if (direction == DIRECTION.RIGHT && mRightCursorIndex == maxMarkIndex) {
                 return;
             }
 
-            if (mRightCursorRect.left + deltaX < mLeftCursorRect.right) {
-                if (mLeftHited || mLeftCursorIndex == 0
-                        || mLeftScroller.computeScrollOffset()) {
+            //向左滑动滑动右游标和左游标中心重合
+            //if (mRightCursorRect.left + deltaX < mLeftCursorRect.right) {
+            if (mRightCursorRect.left + deltaX <= mLeftCursorRect.left) {
+                if (mLeftHited || mLeftCursorIndex == 0 || mLeftScroller.computeScrollOffset()) {
                     deltaX = mLeftCursorRect.right - mRightCursorRect.left;
                 } else {
                     if (mLeftCursorIndex >= 1) {
@@ -764,7 +911,7 @@ public class RangeSeekbar extends View {
                             mLeftScroller.startScroll(fromX, 0,
                                     mLeftCursorNextIndex * mPartLength - fromX,
                                     0, mDuration);
-                            triggleCallback(true, mLeftCursorNextIndex);
+                            //triggleCallback(false);
                         }
                     }
                 }
@@ -776,44 +923,29 @@ public class RangeSeekbar extends View {
 
             final float moveX = deltaX / mPartLength;
             mRightCursorIndex += moveX;
-
+            if (mRightCursorIndex > (mMarkCount - 1)) {
+                mRightCursorIndex = mMarkCount - 1;
+            }
+            computeProgress(false);
+            triggleCallback(false);
             invalidate();
         }
     }
+    //</editor-fold>
 
-    @Override
-    public void computeScroll() {
-        if (mLeftScroller.computeScrollOffset()) {
-            final int deltaX = mLeftScroller.getCurrX();
-
-            mLeftCursorIndex = (float) deltaX / mPartLength;
-
-            invalidate();
-        }
-
-        if (mRightScroller.computeScrollOffset()) {
-            final int deltaX = mRightScroller.getCurrX();
-
-            mRightCursorIndex = (float) deltaX / mPartLength;
-
-            invalidate();
-        }
-    }
-
-    private void triggleCallback(boolean isLeft, int location) {
-        if (mListener == null) {
-            return;
-        }
-
+    //<editor-fold desc="回调处理">
+    private void triggleCallback(boolean isLeft) {
         if (isLeft) {
-            //mLeftCursorText = String.valueOf(location);
-            mListener.onLeftCursorChanged(location,
-                    mTextArray[location].toString());
+            if (mLeftCursorChangListener != null) {
+                mLeftCursorChangListener.onLeftCursorChanged(this, mLeftProgress);
+            }
         } else {
-            mListener.onRightCursorChanged(location,
-                    mTextArray[location].toString());
+            if (null != mRightCursorChangListener) {
+                mRightCursorChangListener.onRightCursorChanged(this, mRightProgress);
+            }
         }
     }
+    //</editor-fold>
 
     public void setLeftSelection(int partIndex) {
         if (partIndex >= mTextArray.length - 1 || partIndex < 0) {
@@ -836,7 +968,7 @@ public class RangeSeekbar extends View {
             final int leftFromX = (int) (mLeftCursorIndex * mPartLength);
             mLeftScroller.startScroll(leftFromX, 0, mLeftCursorNextIndex
                     * mPartLength - leftFromX, 0, mDuration);
-            triggleCallback(true, mLeftCursorNextIndex);
+            triggleCallback(true);
 
             if (mRightCursorIndex <= mLeftCursorNextIndex) {
                 if (!mRightScroller.isFinished()) {
@@ -846,7 +978,7 @@ public class RangeSeekbar extends View {
                 final int rightFromX = (int) (mRightCursorIndex * mPartLength);
                 mRightScroller.startScroll(rightFromX, 0, mRightCursorNextIndex
                         * mPartLength - rightFromX, 0, mDuration);
-                triggleCallback(false, mRightCursorNextIndex);
+                triggleCallback(false);
             }
 
             //mLeftCursorText = mTextArray[partIndex].toString();
@@ -876,7 +1008,7 @@ public class RangeSeekbar extends View {
             final int rightFromX = (int) (mPartLength * mRightCursorIndex);
             mRightScroller.startScroll(rightFromX, 0, mRightCursorNextIndex
                     * mPartLength - rightFromX, 0, mDuration);
-            triggleCallback(false, mRightCursorNextIndex);
+            triggleCallback(false);
 
             if (mLeftCursorIndex >= mRightCursorNextIndex) {
                 if (!mLeftScroller.isFinished()) {
@@ -887,7 +1019,7 @@ public class RangeSeekbar extends View {
                 final int leftFromX = (int) (mLeftCursorIndex * mPartLength);
                 mLeftScroller.startScroll(leftFromX, 0, mLeftCursorNextIndex
                         * mPartLength - leftFromX, 0, mDuration);
-                triggleCallback(true, mLeftCursorNextIndex);
+                triggleCallback(true);
             }
             invalidate();
         }
@@ -1062,17 +1194,92 @@ public class RangeSeekbar extends View {
         return (int) mRightCursorIndex;
     }
 
-    public void setOnCursorChangeListener(OnCursorChangeListener l) {
-        mListener = l;
+    @Override
+    public void setEnableLeftCursor(boolean enabled) {
+        mEnableLeftCursor = enabled;
+    }
+
+    @Override
+    public void setEnableRightCursor(boolean enabled) {
+        mEnableRightCursor = enabled;
+    }
+
+    @Override
+    public void setLeftCursorChangListener(LeftCursorChangListener listener) {
+        mLeftCursorChangListener = listener;
+    }
+
+    @Override
+    public void setRightCursorChangListener(RightCursorChangListener listener) {
+        mRightCursorChangListener = listener;
+    }
+
+    @Override
+    public void setCursorChangeListener(CursorChangeListener listener) {
+        mLeftCursorChangListener = listener;
+        mRightCursorChangListener = listener;
+    }
+
+    @Override
+    public void setMax(int max) {
+        if (max < 0) {
+            max = 0;
+        }
+        if (max != mMax) {
+            mMax = max;
+            if (mRightProgress > max) {
+                mRightProgress = max;
+            }
+            postInvalidate();
+            //refreshProgress(mRightProgress, false);
+        }
+    }
+
+    private void computeProgress(boolean isLeft) {
+        if (isLeft) {
+            mLeftProgress = (int) ((mMax / (mMarkCount - 1)) * mLeftCursorIndex);
+        } else {
+            //1 * 2.8
+            mRightProgress = (int) ((mMax / (mMarkCount - 1)) * mRightCursorIndex);
+        }
     }
 
     private enum DIRECTION {
-        LEFT, RIGHT;
+        LEFT, RIGHT
     }
 
-    public interface OnCursorChangeListener {
-        void onLeftCursorChanged(int location, String textMark);
-
-        void onRightCursorChanged(int location, String textMark);
-    }
 }
+
+//    private void refreshProgress(int progress, boolean fromUser) {
+//        doRefreshProgress(progress, fromUser, true);
+//
+//    }
+//
+//    private void doRefreshProgress(int progress, boolean fromUser,
+//                                   boolean callBackToApp) {
+//        invalidate();
+//    }
+//
+//    public void setProgress(int progress) {
+//        setProgress(progress, false);
+//    }
+
+//    void setProgress(int progress, boolean fromUser) {
+//
+//        if (progress < 0) {
+//            progress = 0;
+//        }
+//
+//        if (progress > mMax) {
+//            progress = mMax;
+//        }
+//
+//        if (progress != mRightProgress) {
+//            mRightProgress = progress;
+//            refreshProgress(mRightProgress, fromUser);
+//        }
+//    }
+
+
+
+

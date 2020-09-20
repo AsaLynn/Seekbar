@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="markArray">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="array_first_phase">
+        <item>0</item>
+        <item>200</item>
+        <item>400</item>
+        <item>600</item>
+        <item>800</item>
+        <item>1000</item>
+    </string-array>
+
+    <string-array name="array_total_price">
+        <item>0</item>
+        <item>400</item>
+        <item>800</item>
+        <item>1200</item>
+        <item>1600</item>
+        <item>2000</item>
+    </string-array>
+
+    <string-array name="array_area">
+        <item>0</item>
+        <item>600</item>
+        <item>1200</item>
+        <item>1800</item>
+        <item>2400</item>
+        <item>3000</item>
+    </string-array>
+
+    <string-array name="array_house_count">
+        <item>0房</item>
+        <item>1房</item>
+        <item>2房</item>
+        <item>3房</item>
+        <item>4房</item>
+        <item>5房</item>
+    </string-array>
+
+    <string-array name="csArray">
+        <item>0厕</item>
+        <item>1厕</item>
+        <item>2厕</item>
+        <item>3厕</item>
+        <item>4厕</item>
+        <item>5厕</item>
+    </string-array>
+
+</resources>

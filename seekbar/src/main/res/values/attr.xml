@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="CursorSeekBar">
+        <attr name="csbEnableLeftCursor" format="boolean" />
+        <attr name="csbEnableRightCursor" format="boolean" />
+        <attr name="csbSpaceBetween" format="dimension" />
+        <attr name="csbAutoMoveDuration" format="integer" />
+        <attr name="csbTextColor" format="color" />
+        <attr name="csbTextColorSelected" format="color" />
+        <attr name="csbBarColor" format="color" />
+        <attr name="csbBarColorSelected" format="color" />
+        <attr name="csbMarkTextArray" format="reference" />
+        <attr name="csbLeftCursorDrawable" format="reference" />
+        <attr name="csbRightCursorDrawable" format="reference" />
+        <attr name="csbTextSize" format="dimension" />
+        <attr name="csbMax" format="integer" />
+        <attr name="csbUnit" format="string" localization="suggested" />
+        <attr name="csbMarkTextColor" format="color" />
+        <attr name="csbMarkTextSize" format="dimension" />
+        <attr name="csbBarHeight" format="dimension" />
+    </declare-styleable>
 
     <declare-styleable name="RangeSeekbar">
         <attr name="seekbarHeight" format="dimension" />
@@ -16,3 +35,49 @@
     </declare-styleable>
 
 </resources>
+
+
+    <!--
+    <attr format="boolean" name="srlEnableRefresh"/>
+    <attr name="minWidth" format="dimension" />
+        <attr name="maxWidth" format="dimension" />
+        <attr name="minHeight" format="dimension" />
+        <attr name="maxHeight" format="dimension" />
+    <attr name="progress" format="integer" />
+    <attr name="cursorDrawable" format="reference" />
+     <attr name="cursorDrawable" format="reference" />
+    <attr name="singleCursor" format="boolean" />
+    <attr name="markTextColor" format="color" />
+
+     csb
+    -->
+
+
+    <!--
+    <declare-styleable name="ProgressBar">
+    <attr name="max" format="integer" />
+    <attr name="progress" format="integer" />
+    <attr name="secondaryProgress" format="integer" />
+    <attr name="indeterminate" format="boolean" />
+    <attr name="indeterminateOnly" format="boolean" />
+    <attr name="indeterminateDrawable" format="reference" />
+    <attr name="progressDrawable" format="reference" />
+    <attr name="indeterminateDuration" format="integer" min="1" />
+    <attr name="indeterminateBehavior">
+        <enum name="repeat" value="1" />
+        <enum name="cycle" value="2" />
+    </attr>
+    <attr name="minWidth" format="dimension" />
+    <attr name="maxWidth" format="dimension" />
+    <attr name="minHeight" format="dimension" />
+    <attr name="maxHeight" format="dimension" />
+    <attr name="interpolator" format="reference" />
+    <attr name="animationResolution" format="integer" />
+    <attr name="mirrorForRtl" format="boolean" />
+    </declare-styleable>
+    -->
+
+
+    <!--    <declare-styleable name="RangeSeekbar" >
+
+        </declare-styleable>-->

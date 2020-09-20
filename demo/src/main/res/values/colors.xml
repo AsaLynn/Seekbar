@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6D8FB0</color>
+    <color name="colorPrimaryDark">#455A64</color>
+    <color name="colorAccent">#FF9800</color>
+    <color name="color_gray">#B4B4B4</color>
+    <color name="color_green">#00b4aa</color>
+    <color name="color_red">#FF6A6E</color>
+    <color name="color_red_light">#FFB4B6</color>
+    <color name="color_blue">#03A9F4</color>
+    <color name="color_gray_light">#F5F5F5</color>
+    <color name="color4A90DA">#4A90DA</color>
+    <color name="color707070">#707070</color>
+    <color name="colorA0A0A0">#A0A0A0</color>
+    <color name="color3396FB">#3396FB</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+
+
+    <color name="red">#FF0000</color>
+    <color name="line_bg">#dcdcdc</color>
+
+    <color name="title_btn_background_click">#33000000</color>
+    <color name="title_btn_background_normal">@android:color/transparent</color>
+    <color name="color666666">#666666</color>
+    <color name="colorF2F2F2">#F2F2F2</color>
+    <color name="colorA0ADF0">#A0ADF0</color>
+    <color name="colorF0F0F0">#F0F0F0</color>
+    <color name="color0000EE">#0000EE</color>
+    <color name="transparent">#00000000</color>
+    <color name="colorD5E7FA">#D5E7FA</color>
+    <color name="colorF25542">#F25542</color>
+    <color name="colorE0E0E0">#E0E0E0</color>
+    <color name="colorD0D0D0">#D0D0D0</color>
+    <color name="colorE29F34">#E29F34</color>
+    <color name="colorB1B1B1">#B1B1B1</color>
+    <color name="color696969">#696969</color>
+    <color name="colorF4F4F4">#F4F4F4</color>
+    <color name="colorF6F6F6">#F6F6F6</color>
+    <color name="colorF9F9F8">#F9F9F8</color>
+    <color name="color19BC85">#19BC85</color>
+    <color name="colorD361FE">#D361FE</color>
+    <color name="colorA9A9A9">#A9A9A9</color>
+    <color name="color717171">#717171</color>
+    <color name="color656565">#656565</color>
+    <color name="c_ffffff">#ffffff</color>
+    <color name="c_bbbbbb">#bbbbbb</color>
+</resources>

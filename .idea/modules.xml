@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Seekbar.iml" filepath="$PROJECT_DIR$/.idea/modules/Seekbar.iml" group="Seekbar" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="Seekbar/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/demo.iml" filepath="$PROJECT_DIR$/.idea/modules/app/demo.iml" group="Seekbar/demo" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/bubbleseekbar/seekbar.iml" filepath="$PROJECT_DIR$/.idea/modules/bubbleseekbar/seekbar.iml" group="Seekbar/seekbar" />
     </modules>
   </component>
