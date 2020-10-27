@@ -64,5 +64,11 @@ public class AreaFragment extends Fragment {
                 tvCount.setText(mLeftMark + "至" + mRightMark);
             }
         });
+
+
+        csbSeek.setProgress(100,500);
+
     }
+
+
 }

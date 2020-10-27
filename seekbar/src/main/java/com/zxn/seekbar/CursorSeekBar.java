@@ -1248,6 +1248,25 @@ public class CursorSeekBar extends View implements ISeekBar {
         LEFT, RIGHT
     }
 
+    public void setLeftProgress(int progress) {
+        mLeftProgress = progress;
+        mLeftCursorIndex = Float.valueOf(String.valueOf(mLeftProgress)) / (mMax / (mMarkCount - 1));
+        postInvalidate();
+    }
+
+    public void setRightProgress(int progress) {
+        mRightProgress = progress;
+        postInvalidate();
+    }
+
+    public void setProgress(int leftProgress, int rightProgress) {
+        mLeftProgress = leftProgress;
+        mRightProgress = rightProgress;
+        mLeftCursorIndex = Float.valueOf(String.valueOf(mLeftProgress)) / (mMax / (mMarkCount - 1));
+        mRightCursorIndex = Float.valueOf(String.valueOf(mRightProgress)) / (mMax / (mMarkCount - 1));
+        postInvalidate();
+    }
+
 }
 
 //    private void refreshProgress(int progress, boolean fromUser) {
@@ -1264,21 +1283,7 @@ public class CursorSeekBar extends View implements ISeekBar {
 //        setProgress(progress, false);
 //    }
 
-//    void setProgress(int progress, boolean fromUser) {
-//
-//        if (progress < 0) {
-//            progress = 0;
-//        }
-//
-//        if (progress > mMax) {
-//            progress = mMax;
-//        }
-//
-//        if (progress != mRightProgress) {
-//            mRightProgress = progress;
-//            refreshProgress(mRightProgress, fromUser);
-//        }
-//    }
+
 
 
 

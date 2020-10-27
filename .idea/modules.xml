@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Seekbar.iml" filepath="$PROJECT_DIR$/.idea/modules/Seekbar.iml" group="Seekbar" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/demo.iml" filepath="$PROJECT_DIR$/.idea/modules/app/demo.iml" group="Seekbar/demo" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bubbleseekbar/seekbar.iml" filepath="$PROJECT_DIR$/.idea/modules/bubbleseekbar/seekbar.iml" group="Seekbar/seekbar" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Seekbar.iml" filepath="$PROJECT_DIR$/.idea/modules/Seekbar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/demo/Seekbar.demo.iml" filepath="$PROJECT_DIR$/.idea/modules/demo/Seekbar.demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/seekbar/Seekbar.seekbar.iml" filepath="$PROJECT_DIR$/.idea/modules/seekbar/Seekbar.seekbar.iml" />
     </modules>
   </component>
 </project>
